@@ -3,7 +3,8 @@ const db = knex(require("../knexfile.js").development);
 
 module.exports = {
   find,
-  findById
+  findById,
+  findSteps
 };
 
 function find() {
@@ -21,4 +22,12 @@ function findById(id) {
         return null;
       }
     });
+}
+
+function findSteps(schemeId) {
+  return db("steps as st")
+    .join("schemes as sc", "sc.id", "st.scheme_id")
+    .select("st.id", "sc.scheme_name", "st.step_number", "st.instructions")
+    .where("sc.id", schemeId)
+    .orderBy("st.step_number");
 }
