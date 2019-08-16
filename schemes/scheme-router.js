@@ -64,7 +64,9 @@ router.post("/", async (req, res) => {
     const scheme = await Schemes.add(schemeData);
     res.status(201).json(scheme);
   } catch (err) {
-    res.status(500).json({ message: "Failed to create new scheme" });
+    res
+      .status(500)
+      .json({ message: "Failed to create new scheme", error: err.message });
   }
 });
 
@@ -94,7 +96,7 @@ router.put("/:id", async (req, res) => {
     const scheme = await Schemes.findById(id);
 
     if (scheme) {
-      const updatedScheme = await Schemes.update(changes, id);
+      const updatedScheme = await Schemes.update(id, changes);
       res.json(updatedScheme);
     } else {
       res.status(404).json({ message: "Could not find scheme with given id" });
